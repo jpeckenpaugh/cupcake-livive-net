@@ -1,0 +1,227 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(ellipse at top, #fffcf3, #f8e2dc);
+  color: #4c2833;
+  font: 16px/1.5 system-ui, sans-serif;
+}
+main { width: min(100% - 32px, 470px); margin: 32px auto; }
+h1 {
+  margin: 0;
+  font: bold clamp(2rem, 8vw, 3.5rem)/1.1 Georgia, serif;
+  letter-spacing: -.05em;
+}
+h1 em { color: #9e3558; }
+header p { margin: 10px 0 20px; }
+.toolbar, .controls { display: flex; align-items: center; gap: 8px; }
+.toolbar { justify-content: space-between; margin-bottom: 10px; }
+.score { font-size: .9rem; }
+.score strong { font-size: 1.35rem; margin-inline: 4px; }
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 9px 14px;
+  font: inherit;
+  font-weight: 650;
+  background: #83344e;
+  color: white;
+  cursor: pointer;
+}
+button:hover { background: #64253a; }
+button:focus-visible { outline: 3px solid #54233b; outline-offset: 3px; }
+button:disabled { opacity: .5; cursor: default; }
+#board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+  padding: 9px;
+  border-radius: 17px;
+  background: #ae6b7f;
+  box-shadow: 0 10px 25px #67344b20;
+}
+.tile {
+  aspect-ratio: 1;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+  background: var(--tile-color, #cb95a4);
+  border-radius: 9px;
+  font-size: clamp(.57rem, 2.3vw, .77rem);
+  line-height: 1.15;
+  font-weight: 750;
+  padding: 2px;
+}
+#status { min-height: 1.5em; margin: 8px 0; font-weight: 650; }
+.controls { justify-content: center; }
+.controls button { min-width: 46px; font-size: 1.2rem; }
+.help { font-size: .9rem; text-align: center; }
+
+#board { isolation: isolate; }
+.tile.filled { z-index: 1; }
+.cupcake {
+  position: relative;
+  width: clamp(28px, 10vw, 61px);
+  aspect-ratio: 1.2;
+  margin-bottom: 4px;
+  filter: drop-shadow(0 2px 1px #4c283326);
+}
+.cupcake::before {
+  content: "";
+  position: absolute;
+  inset: 44% 12% 1%;
+  clip-path: polygon(0 0, 100% 0, 82% 100%, 18% 100%);
+  background: repeating-linear-gradient(83deg, #ffffff38 0 3px, #0000000e 3px 6px),
+    var(--wrapper, #bb7148);
+  border-radius: 6px;
+}
+.cupcake::after {
+  content: "";
+  position: absolute;
+  inset: 2% 3% 38%;
+  border-radius: 54% 54% 28% 28% / 76% 76% 34% 34%;
+  background: linear-gradient(175deg, #ffffff55, transparent 60%, #00000028),
+    var(--frosting, #fff7e3);
+  box-shadow: inset 0 -3px #00000017;
+}
+.tile.filled { font-size: clamp(.83rem, 3.2vw, 1.2rem); font-variant-numeric: tabular-nums; }
+
+.cupcake .topping {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+}
+[data-tier="1"] .topping {
+  background:
+    radial-gradient(ellipse at 34% 36%, #e36589 0 4%, transparent 5%),
+    radial-gradient(ellipse at 54% 19%, #61a590 0 4%, transparent 5%),
+    radial-gradient(ellipse at 66% 41%, #8462be 0 4%, transparent 5%),
+    radial-gradient(ellipse at 47% 47%, #eaa62a 0 4%, transparent 5%);
+}
+
+/* Bubblegum pearl on a low mound of pink frosting. */
+[data-tier="2"] { --frosting: #f58cb2; --wrapper: #c75782; }
+[data-tier="2"] .cupcake::after { inset-block-start: 24%; }
+[data-tier="2"] .topping {
+  inset: 2% 36% 62%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff4fd, #ef75ac 42%, #ae2f6d);
+}
+
+/* Sunshine vanilla with a lemon-colored buttercream swirl. */
+[data-tier="3"] { --frosting: #ffd562; --wrapper: #db8e34; }
+[data-tier="3"] .cupcake::after {
+  clip-path: polygon(50% 0, 62% 19%, 65% 31%, 78% 40%, 83% 58%, 96% 70%, 100% 91%, 87% 100%, 13% 100%, 0 91%, 4% 70%, 17% 58%, 22% 40%, 35% 31%, 38% 19%);
+  border-radius: 0;
+  background: repeating-linear-gradient(168deg, #ffeb9f 0 16%, #efaf37 25%, #ffd562 31%);
+}
+
+/* Blonde ganache with a tilted chocolate shard. */
+[data-tier="4"] { --frosting: #cc8d51; --wrapper: #995a41; }
+[data-tier="4"] .cupcake::after { inset-block-start: 29%; border-radius: 48% 48% 25% 25%; }
+[data-tier="4"] .topping {
+  inset: 5% 35% 59% 45%;
+  transform: rotate(23deg);
+  border-radius: 2px;
+  background: linear-gradient(115deg, #fff4cf, #e3b26d);
+  box-shadow: 2px 1px #9c6237;
+}
+
+/* Peanut butter cheesecake with a ridged candy cup. */
+[data-tier="5"] { --frosting: #c99562; --wrapper: #754331; }
+[data-tier="5"] .cupcake::after { inset-block-start: 24%; border-radius: 24% 24% 35% 35%; }
+[data-tier="5"] .topping {
+  inset: 9% 30% 57%;
+  border-radius: 50% 50% 25% 25%;
+  background: radial-gradient(ellipse at 50% 25%, #dbac68 0 42%, transparent 45%),
+    repeating-linear-gradient(90deg, #4a241d 0 3px, #784133 3px 5px);
+}
+
+/* Mint fudge with chocolate chips and a leaf. */
+[data-tier="6"] { --frosting: #81d6a5; --wrapper: #70412f; }
+[data-tier="6"] .topping {
+  background:
+    radial-gradient(circle at 30% 45%, #613529 0 5%, transparent 6%),
+    radial-gradient(circle at 48% 36%, #613529 0 4%, transparent 5%),
+    radial-gradient(circle at 69% 48%, #613529 0 5%, transparent 6%);
+}
+[data-tier="6"] .topping::after {
+  content: "";
+  position: absolute;
+  inset: 4% 28% 71% 48%;
+  border-radius: 80% 10% 80% 10%;
+  transform: rotate(-20deg);
+  background: linear-gradient(150deg, #80c05d 48%, #287541 50%);
+}
+
+/* Chocolate icing with piped spiderweb rings and spokes. */
+[data-tier="7"] { --frosting: #754135; --wrapper: #512a28; }
+[data-tier="7"] .cupcake::after { inset-block-start: 14%; }
+[data-tier="7"] .topping {
+  inset: 16% 14% 44%;
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(ellipse, transparent 0 18%, #fff5e6 20% 23%, transparent 25% 33%),
+    repeating-conic-gradient(from 15deg, #fff5e6 0 3deg, transparent 4deg 60deg);
+}
+
+/* Three toasted marshmallow pillows. */
+[data-tier="8"] { --frosting: #ffe8ce; --wrapper: #ae7459; }
+[data-tier="8"] .cupcake::after {
+  border-radius: 0;
+  background:
+    radial-gradient(ellipse at 50% 28%, #b76835, #fff0d8 66%) top center / 46% 70% no-repeat,
+    radial-gradient(ellipse at 54% 30%, #c48249, #fff0d8 66%) bottom left / 48% 57% no-repeat,
+    radial-gradient(ellipse at 46% 30%, #bd7544, #fff0d8 66%) bottom right / 48% 57% no-repeat;
+  clip-path: polygon(0 53%, 27% 53%, 27% 0, 73% 0, 73% 53%, 100% 53%, 100% 100%, 0 100%);
+}
+
+/* Cookies and cream with a sandwich cookie tucked into the frosting. */
+[data-tier="9"] { --frosting: #eee4ee; --wrapper: #654d7c; }
+[data-tier="9"] .cupcake::after {
+  inset-block-start: 22%;
+  background: radial-gradient(circle at 24% 51%, #65525f 0 5%, transparent 6%),
+    radial-gradient(circle at 70% 69%, #65525f 0 4%, transparent 5%), #eee4ee;
+}
+[data-tier="9"] .topping {
+  inset: 0 28% 56% 35%;
+  transform: rotate(-24deg);
+  border-radius: 50%;
+  background: radial-gradient(circle, #58414a 0 27%, #372730 28% 44%, #654d54 45% 49%, #372730 50%);
+  box-shadow: 2px 1px #fff3de, 4px 2px #372730;
+}
+
+/* Chocolate sundae with a glossy cherry and stem. */
+[data-tier="10"] { --wrapper: #a94267; }
+[data-tier="10"] .cupcake::after {
+  inset-block-start: 14%;
+  background: radial-gradient(ellipse at 30% 62%, #874538 0 11%, transparent 12%),
+    radial-gradient(ellipse at 65% 67%, #874538 0 8%, transparent 9%),
+    linear-gradient(#874538 0 49%, #fff1d6 50%);
+}
+[data-tier="10"] .topping {
+  inset: 9% 36% 66% 43%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 29%, #ff9f9f, #c63253 48%, #8f1d42);
+}
+[data-tier="10"] .topping::before {
+  content: "";
+  position: absolute;
+  inset: -59% 0 64% 40%;
+  border: solid #613f3e;
+  border-width: 0 0 0 2px;
+  border-radius: 65% 0 0 0;
+  transform: rotate(22deg);
+}
+
+/* White chocolate frosting topped with a striped peppermint stick. */
+[data-tier="11"] { --frosting: #faffff; --wrapper: #5798a5; }
+[data-tier="11"] .cupcake::after { inset-block-start: 22%; }
+[data-tier="11"] .topping {
+  inset: -10% 36% 53% 48%;
+  border-radius: 5px;
+  transform: rotate(25deg);
+  background: repeating-linear-gradient(135deg, #fff 0 4px, #d94359 4px 8px);
+  box-shadow: inset -2px 0 #60202028;
+}

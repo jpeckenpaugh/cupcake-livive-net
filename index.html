@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2048 Cupcakes</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="game.js" defer></script>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>2048 <em>Cupcakes</em></h1>
+      <p>Merge matching cupcakes to make White Chocolate Peppermint.</p>
+    </header>
+    <div class="toolbar">
+      <div class="score">Score <strong id="score">0</strong> kcal</div>
+      <button id="restart" type="button">New game</button>
+    </div>
+    <div id="board" aria-label="Cupcake board" role="group"></div>
+    <p id="status" role="status"></p>
+    <div class="controls" aria-label="Move cupcakes" role="group">
+      <button data-move="ArrowLeft" aria-label="Move left">←</button>
+      <button data-move="ArrowUp" aria-label="Move up">↑</button>
+      <button data-move="ArrowDown" aria-label="Move down">↓</button>
+      <button data-move="ArrowRight" aria-label="Move right">→</button>
+    </div>
+    <p class="help">Use the arrow keys or buttons. Each merge adds the new cupcake’s calories to your score.</p>
+  </main>
+</body>
+</html>
