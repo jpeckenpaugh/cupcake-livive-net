@@ -15,6 +15,9 @@ const cupcakes = [
   { name: "White Choc Peppermint", kcal: 2000, color: "#c6ebf1" },
 ];
 
+const halloweenToppings = ["🎃", "👻", "🍬", "🦇", "👁️", "🐈‍⬛", "🕸️", "💀", "🌙", "🕷️", "🧙"];
+const christmasToppings = ["⭐", "🎀", "🔔", "🍪", "🦌", "🎄", "❄️", "☃️", "🎁", "🍒", "🍬"];
+
 const directions = {
   ArrowLeft: (line, step) => line * size + step,
   ArrowRight: (line, step) => line * size + size - 1 - step,
@@ -55,7 +58,10 @@ const stylePicker = document.querySelector("#cupcake-style");
 const styleKey = "cupcake-style";
 
 try {
-  if (localStorage.getItem(styleKey) === "photo") stylePicker.value = "photo";
+  const savedStyle = localStorage.getItem(styleKey);
+  if (Array.from(stylePicker.options).some(option => option.value === savedStyle)) {
+    stylePicker.value = savedStyle;
+  }
 } catch {
   // Some browsers block storage for local files.
 }
@@ -76,6 +82,9 @@ applyStyle();
 
 const scoreElement = document.querySelector("#score");
 const statusElement = document.querySelector("#status");
+const gameOverElement = document.querySelector("#game-over");
+const finalScoreElement = document.querySelector("#final-score");
+let openingAnimation;
 const buttons = document.querySelectorAll("[data-move]");
 let board;
 let score;
@@ -107,11 +116,17 @@ function render() {
     icon.className = "cupcake";
     const photoIndex = tier - 1;
     icon.style.setProperty("--photo-x", `${(photoIndex % 4) * 100 / 3}%`);
-    icon.style.setProperty("--photo-y", `${Math.floor(photoIndex / 4) * 100 / 3}%`);
+    icon.dataset.photoRow = Math.floor(photoIndex / 4);
     icon.setAttribute("aria-hidden", "true");
     const topping = document.createElement("span");
     topping.className = "topping";
-    icon.append(topping);
+    const halloween = document.createElement("span");
+    halloween.className = "holiday-topping halloween-topping";
+    halloween.textContent = halloweenToppings[tier - 1];
+    const christmas = document.createElement("span");
+    christmas.className = "holiday-topping christmas-topping";
+    christmas.textContent = christmasToppings[tier - 1];
+    icon.append(topping, halloween, christmas);
     const label = document.createElement("span");
     label.textContent = value;
     tile.append(icon, label);
@@ -152,9 +167,11 @@ async function move(direction) {
     statusElement.textContent = "You made White Chocolate Peppermint! Keep playing for a higher score.";
   }
   if (finished) {
+    finalScoreElement.textContent = `${score.toLocaleString()} kcal`;
+    gameOverElement.hidden = false;
     statusElement.textContent = reachedGoal
-      ? "You reached the goal! No moves left."
-      : "No moves left. Start a new game to try again.";
+      ? "Game over. You reached the goal! No moves left."
+      : "Game over. No moves left. Start a new game to try again.";
   }
   render();
 }
@@ -162,6 +179,8 @@ async function move(direction) {
 function restart() {
   activeMove?.forEach(animation => animation.cancel());
   activeMove = null;
+  openingAnimation?.cancel();
+  gameOverElement.hidden = true;
   board = Array(size * size).fill(0);
   score = 0;
   finished = false;
@@ -170,6 +189,12 @@ function restart() {
   spawn();
   spawn();
   render();
+  if (!reducedMotion.matches) {
+    openingAnimation = boardElement.animate(
+      [{ opacity: 0.45, scale: 0.97 }, { opacity: 1, scale: 1 }],
+      { duration: 250, easing: "ease-out" },
+    );
+  }
 }
 
 document.addEventListener("keydown", event => {

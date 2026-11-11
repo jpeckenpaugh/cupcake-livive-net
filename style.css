@@ -242,15 +242,110 @@ button:disabled { opacity: .5; cursor: default; }
   color: inherit;
   font: inherit;
 }
-#board[data-style="photo"] .cupcake {
+#board[data-style$="photo"] .cupcake {
   width: clamp(34px, 13vw, 74px);
   aspect-ratio: 1;
   margin-bottom: 0;
-  background: url("assets/cupcake-photos.png") var(--photo-x) var(--photo-y) / 400% 400% no-repeat;
+  background-image: var(--photo-sheet, url("assets/cupcake-photos.png"));
+  background-position: var(--photo-x) var(--photo-y, 0%);
+  background-size: 400% var(--photo-height, 400%);
+  background-repeat: no-repeat;
   filter: none;
 }
-#board[data-style="photo"] .cupcake::before,
-#board[data-style="photo"] .cupcake::after,
-#board[data-style="photo"] .topping {
+#board[data-style$="photo"] .cupcake::before,
+#board[data-style$="photo"] .cupcake::after,
+#board[data-style$="photo"] .topping {
   display: none;
 }
+
+.holiday-topping { display: none; }
+#board[data-style^="halloween"] {
+  background: #3d2847;
+  --holiday-empty: #563d60;
+  --holiday-accent: #ffe3b4;
+  --holiday-secondary: #eed6ff;
+  --holiday-wrapper: #492c5b;
+}
+#board[data-style^="christmas"] {
+  background: #285949;
+  --holiday-empty: #417463;
+  --holiday-accent: #fce1dc;
+  --holiday-secondary: #e1f3df;
+  --holiday-wrapper: #9d3049;
+}
+#board:is([data-style^="halloween"], [data-style^="christmas"]) .tile {
+  background: var(--holiday-empty);
+}
+#board:is([data-style^="halloween"], [data-style^="christmas"]) .filled {
+  background: color-mix(in srgb, var(--tile-color) 55%, var(--holiday-accent));
+}
+#board:is([data-style^="halloween"], [data-style^="christmas"]) .filled:nth-child(even) {
+  background: color-mix(in srgb, var(--tile-color) 55%, var(--holiday-secondary));
+}
+#board:is([data-style^="halloween"], [data-style^="christmas"]) .cupcake::before {
+  background: repeating-linear-gradient(83deg, #ffffff38 0 3px, #0000000e 3px 6px),
+    var(--holiday-wrapper);
+}
+#board:is([data-style^="halloween"], [data-style^="christmas"]) .topping {
+  display: none;
+}
+#board[data-style="halloween"] .halloween-topping,
+#board[data-style="christmas"] .christmas-topping {
+  display: block;
+  position: absolute;
+  z-index: 1;
+  inset: -12% 0 auto;
+  font-size: clamp(.75rem, 3.6vw, 1.45rem);
+  line-height: 1;
+}
+
+.board-stage { position: relative; }
+.game-over[hidden] { display: none; }
+.game-over {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 17px;
+  background: #34202bbc;
+  animation: game-over-fade 240ms ease-out both;
+}
+.game-over-card {
+  display: grid;
+  gap: 4px;
+  padding: 20px 32px;
+  border-radius: 14px;
+  background: #fffcf3;
+  text-align: center;
+  box-shadow: 0 10px 25px #24141e66;
+  animation: game-over-enter 360ms cubic-bezier(.2,.75,.3,1) both;
+}
+.game-over-card strong { font: bold clamp(1.8rem, 8vw, 3rem)/1.1 Georgia, serif; }
+@keyframes game-over-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes game-over-enter {
+  from { transform: translateY(12px) scale(.93); }
+  to { transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .game-over, .game-over-card { animation: none; }
+}
+
+#board[data-style="halloween-photo"] {
+  --photo-sheet: url("assets/cupcake-halloween.png");
+  --photo-height: 390%;
+  --photo-second-row: 34.4%;
+  --photo-third-row: 68.7%;
+}
+#board[data-style="christmas-photo"] {
+  --photo-sheet: url("assets/cupcake-christmas.png");
+  --photo-height: 376%;
+  --photo-second-row: 36.2%;
+  --photo-third-row: 72.3%;
+}
+
+.cupcake[data-photo-row="1"] { --photo-y: var(--photo-second-row, 33.333%); }
+.cupcake[data-photo-row="2"] { --photo-y: var(--photo-third-row, 66.667%); }

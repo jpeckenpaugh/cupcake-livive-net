@@ -22,9 +22,21 @@
       <select id="cupcake-style">
         <option value="illustrated">Illustrated</option>
         <option value="photo">Photorealistic</option>
+        <option value="halloween">Halloween</option>
+        <option value="halloween-photo">Halloween (Photorealistic)</option>
+        <option value="christmas">Christmas</option>
+        <option value="christmas-photo">Christmas (Photorealistic)</option>
       </select>
     </div>
-    <div id="board" aria-label="Cupcake board" role="group"></div>
+    <div class="board-stage">
+      <div id="board" aria-label="Cupcake board" role="group"></div>
+      <div id="game-over" class="game-over" aria-hidden="true" hidden>
+        <div class="game-over-card">
+          <strong>Game Over</strong>
+          <span id="final-score"></span>
+        </div>
+      </div>
+    </div>
     <p id="status" role="status"></p>
     <div class="controls" aria-label="Move cupcakes" role="group">
       <button data-move="ArrowLeft" aria-label="Move left">←</button>
