@@ -225,3 +225,32 @@ button:disabled { opacity: .5; cursor: default; }
   background: repeating-linear-gradient(135deg, #fff 0 4px, #d94359 4px 8px);
   box-shadow: inset -2px 0 #60202028;
 }
+
+.appearance {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: .85rem;
+}
+.appearance select {
+  padding: 5px 8px;
+  border: 1px solid #ae6b7f;
+  border-radius: 8px;
+  background: #fffcf3;
+  color: inherit;
+  font: inherit;
+}
+#board[data-style="photo"] .cupcake {
+  width: clamp(34px, 13vw, 74px);
+  aspect-ratio: 1;
+  margin-bottom: 0;
+  background: url("assets/cupcake-photos.png") var(--photo-x) var(--photo-y) / 400% 400% no-repeat;
+  filter: none;
+}
+#board[data-style="photo"] .cupcake::before,
+#board[data-style="photo"] .cupcake::after,
+#board[data-style="photo"] .topping {
+  display: none;
+}

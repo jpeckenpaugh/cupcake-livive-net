@@ -51,6 +51,29 @@ function slide(board, direction) {
 }
 
 const boardElement = document.querySelector("#board");
+const stylePicker = document.querySelector("#cupcake-style");
+const styleKey = "cupcake-style";
+
+try {
+  if (localStorage.getItem(styleKey) === "photo") stylePicker.value = "photo";
+} catch {
+  // Some browsers block storage for local files.
+}
+
+function applyStyle() {
+  boardElement.dataset.style = stylePicker.value;
+}
+
+stylePicker.addEventListener("change", () => {
+  applyStyle();
+  try {
+    localStorage.setItem(styleKey, stylePicker.value);
+  } catch {
+    // The style still works for the current session.
+  }
+});
+applyStyle();
+
 const scoreElement = document.querySelector("#score");
 const statusElement = document.querySelector("#status");
 const buttons = document.querySelectorAll("[data-move]");
@@ -82,6 +105,9 @@ function render() {
     tile.setAttribute("aria-label", `${name}, tile ${value}, ${kcal} calories`);
     const icon = document.createElement("span");
     icon.className = "cupcake";
+    const photoIndex = tier - 1;
+    icon.style.setProperty("--photo-x", `${(photoIndex % 4) * 100 / 3}%`);
+    icon.style.setProperty("--photo-y", `${Math.floor(photoIndex / 4) * 100 / 3}%`);
     icon.setAttribute("aria-hidden", "true");
     const topping = document.createElement("span");
     topping.className = "topping";
@@ -147,6 +173,7 @@ function restart() {
 }
 
 document.addEventListener("keydown", event => {
+  if (event.target === stylePicker) return;
   if (!Object.hasOwn(directions, event.key) || event.altKey || event.ctrlKey || event.metaKey) return;
   event.preventDefault();
   move(event.key);
